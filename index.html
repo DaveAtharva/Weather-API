@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherWise</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="header">
+        <div class="logoimg">
+            <img src="https://weather.omegatower.ninja/img/logo.png" alt="">
+        </div>
+        <div class="name">
+            WeatherWise
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="search">
+            <input class="inp" type="text" placeholder="Enter name of City">
+        <button class="button">
+            <i class="fa-regular fa-magnifying-glass">Search</i>
+        </button>
+        </div>
+
+    <div class="error">
+        <h1>
+            Invalid City Name
+        </h1>
+    </div>
+
+        <div class="frame">
+            <div class="cityname">
+                <h1 class="city">City_Name</h1>
+            </div>
+            <div class="weather">
+                <div class="img">
+                    <img src="https://weather.omegatower.ninja/img/logo.png" class="weatherimg">
+                    <p></p>    
+                </div>
+                
+                <div class="temp">
+                    <h1 class="temprature"> 20°C </h1>
+                </div>
+                <div class="detail">
+                    <div class="col">
+                        <img src="img/wind.png" class="weather-icon">
+                        <h1 class="wind"> Wind : </h1>
+                    </div>
+                    <div class="col">
+                        <img src="img/humidity.png" alt="">
+                        <h1 class="humidity"> Humidity : </h1>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const apikey="5b76a86dc1c0a5616cea4a450181a7b1";
+        const searchbox=document.querySelector(".inp");
+        const searchbtn=document.querySelector(".search button");
+        const apiurl="https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+        const weathericon=document.querySelector(".weatherimg");
+
+        async function checkWeather(City){
+
+            const response = await fetch(apiurl + searchbox.value +"&appid=5b76a86dc1c0a5616cea4a450181a7b1");
+            
+            if(response.status== 404){
+                document.querySelector(".error").style.display="block";
+                document.querySelector(".frame").style.display="none";
+            }
+            else{
+            var data=await response.json();
+
+
+            console.log(searchbox.value)
+            document.querySelector(".city").innerHTML=data.name;
+            document.querySelector(".temprature").innerHTML=data.main.temp+ " °C";
+            document.querySelector(".humidity").innerHTML="Humidity : "+data.main.humidity + " %";
+            document.querySelector(".wind").innerHTML="Wind Speed : "+data.wind.speed +" Km/hr";
+            
+            document.querySelector(".error").style.display="none";
+            document.querySelector(".frame").style.display="block";
+            
+            if(data.weather[0].main == "Clouds"){
+                weathericon.src="img/clouds.png";
+                document.querySelector(".img p").innerHTML="Clouds";
+            }
+            else if(data.weather[0].main == "clear"){
+                weathericon.src="img/clear.png"
+                document.querySelector(".img p").innerHTML="Clear";
+            }
+            else if(data.weather[0].main == "Rain"){
+                weathericon.scr="img/rain.png"
+                document.querySelector(".img p").innerHTML="Rain";
+            }
+            else if(data.weather[0].main == "Drizzle"){
+                weathericon.scr="img/drizzle.png"
+                document.querySelector(".img p").innerHTML="Drizzle";
+            }
+            else if(data.weather[0].main == "Mist"){
+                weathericon.scr="img/mist.png"
+                document.querySelector(".img p").innerHTML="Mist";
+            }
+            }
+
+        }
+        searchbtn.addEventListener("click", ()=>{
+            checkWeather(searchbox.value);
+        })
+
+    </script>
+
+</body>
+</html>
